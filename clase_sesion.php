@@ -5,12 +5,12 @@
 			session_start();
 		}
 
-		//Método para registrar las variables de la sesión. Lo usaremos para guardar el nombre de usuario
+		//Método para registro de variáveis de sessão. Vamos usá-lo para salvar o nome de usuário
 		public function set($nombre,$valor) {
 			$_SESSION[$nombre] = $valor;
 		}
 
-		//Recupera el valor del nombre de usuario
+		//Recupera o valor do nome de usuário
 		public function get($user) {
 			if (isset($_SESSION[$user])) {
 				return $_SESSION[$user];
@@ -19,7 +19,7 @@
 			}
 		}
 
-		//Borra la sesión y vuelve a la página inicial
+		//Fecha a sessão e retorna à página inicial
 		public function borrar_sesion() {
 			$_SESSION = array();
 			session_destroy();

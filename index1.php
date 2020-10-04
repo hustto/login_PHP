@@ -23,7 +23,7 @@ require_once ("clase_sesion.php");
 require_once("clase_usuarios.php");	
 	if (isset($_POST['submit'])) {
 		$usuario = new Usuario($_POST['user'],$_POST['password']);
-		//Verificamos que el nombre de usuario y la contraseña son correctos y, en ese caso, creamos la sesión y redirigimos 
+		//Verificaremos se o nome de usuário e a senha estão corretos e, nesse caso, criamos a sessão e redirecionamos
 		if ($usuario->verificar($_POST['user'],$_POST['password'])) {
 			$sesion = new Sesion();
 			$sesion->set('user',($_POST['user']));

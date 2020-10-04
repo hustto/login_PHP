@@ -1,68 +1,68 @@
 <?php
 class Conectar {
-    //Declado las variables privadas de la clase que se corresponden con los parámetros de conexión al servidor
+    //Declamando as variáveis privadas da classe que correspondem aos parâmetros de conexão ao servidor
 	private $servidor;
     private $user;
     private $password;
-	//Declaro la variable objeto de la conexión
+	//Eu declaro a variável que é o assunto da conexão
     private $objetoConexion;	
-	//Declaro el método constructor de la clase, al que le paso las variables de conexión al servidor
+	//Declaro o método construtor da classe, para o qual passo as variáveis de conexão para o servidor
     public function __construct($servidor,$user,$password) {
-        //Establezco el valor de cada variable de la clase al valor que he pasado al contructor al hacer la llamada en el momento de la definición de la clase
+        //Eu defina o valor de cada variável na classe para o valor que passei para o contrutor ao fazer a chamada no momento da definição da classe
 		$this->servidor=$servidor;
         $this->user=$user;
         $this->password=$password;
     }
 	
-	//Método cpara realizar la conexión al servidor.
+	//Método para  fazer a conexão com o servidor.
     public function conectar() {
-        //Mediante el try intenta realizar lo que se indica entre sus llaves
+        //Usando a tentativa tentar tentar fazer o que é indicado entre suas chaves
 		try {
-            //Realizamos la conexión mediante la clase PDO 
+            //Fazemos a conexão usando a classe PDO 
 			$this->objetoConexion = new PDO($this->servidor,  $this->user ,  $this->password );
-            //Establecemos los atributos correspondientes en caso de error 
+            //Definimos os atributos correspondentes em caso de erro 
 			$this->objetoConexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         }
-        //En caso de que el try no funcione, declaramos la variable ex de PDOException
+        //Caso a tentativa não funcione, declaramos a ex variável do PDOException
 		catch(PDOException $ex) {
             echo "Problemas al conectar con la base de datos";
         }
     }
     
-	//Método para finalizar la conexión con la base de datos
+	//Método para acabar com a conexão com o banco de dados
 	public function desconectar() {
-        //Igualamos a null el objeto conexión
+        //Nós combinamos o objeto de conexão com nulo
 		$this->objetoConexion=null;
     }
     
-	//Método para ejecutar la sentencia SQL que se pase como parámetro de la función
+	//Método para execução da instrução SQL passou como parâmetro de função
 	public function ejecutar($strComando) {
         try {
-            //La variable ejecutar es un objeto que instancia a la clase objetoConexión de la clase clase_conexion
-			//Prepara la sentencia SQL limpiando de posibles problemas relacionados con injection SQL. 
+            //A variável Executar é um objeto que instancia a classe de objeto Conexão da classe clase_conexion
+			//Prepara a instrução SQL limpando possíveis problemas relacionados à injeção SQL. 
 			$ejecutar=$this->objetoConexion->prepare($strComando); 
-            //Ejecuta la sentencia que le pasamos como parámetro strComando.
+            //Executa a declaração passada a ela como parâmetro strComando.
 			$ejecutar->execute();		
         }
         catch(PDOException $ex) {
-            //Devuelve la variable ex con la excepción que surja
+            //Retorna a variável ex com a exceção que surge
 			throw $ex;
         }
     }
 
-    //Método para almacenar los datos devueltos por las consultas realizadas a la base de datos
+    //Método para armazenar dados retornados por consultas feitas ao banco de dados
     public function consultar($strComando) {
         try {
             $ejecutar=$this->objetoConexion->prepare($strComando); 
-            //Ejecuta la sentencia que le pasamos como parámetro strComando. (http://php.net/manual/es/pdostatement.execute.php)
+            //Executa a declaração passada a ela como parâmetro strComando. (http://php.net/manual/es/pdostatement.execute.php)
             $ejecutar->execute();
-            //Guardamos en la variable row lo que devuelva la función fetchAll, es decir la consulta SQL. (http://php.net/manual/es/pdostatement.fetchall.php)
+            //Economizamos para a variável de linha o que a função fetchAll retorna, ou seja, a consulta SQL. (http://php.net/manual/es/pdostatement.fetchall.php)
             $rows = $ejecutar->fetchAll();
             return $rows;
 
         }
         catch(PDOException $ex) {
-            //Devuelve la variable ex con la excepción que surja
+            //Retorna a variável ex com a exceção que surge
             throw $ex;
         }
     }

@@ -26,9 +26,9 @@
 <?php
 require_once ('clase_usuarios.php');
 if (isset($_POST['submit'])) {
-	//Creamos un objeto de la clase Password y almacenamos el valor de la contraseña encriptada en la variable $pw
-	/*Creamos un nuevo usuario que, en el caso de cumplir con las comprobaciones, ejecutará el método nuevo() 
-	para escribir sus datos en la base de datos y redirigirá a la página principal*/
+	//Criamos um objeto da classe Senha e armazenamos o valor da senha criptografada na variável $pw
+	/*Criamos um novo usuário que, em caso de conformidade com as verificações, executará o novo método() 
+	para escrever seus dados para o banco de dados e redirecioná-lo para a página inicial*/
 	$usuario = new Usuario($_POST['user'],$_POST['email']);
 	$pw = $usuario -> encriptar($_POST['password']);
 	if ($usuario->comprobaciones() !== false) {

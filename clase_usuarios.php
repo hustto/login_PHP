@@ -1,7 +1,7 @@
 <?php
 require_once("clase_conectar.php");
 class Usuario {
-    //Declaramos las variables públicas de la clase Usuario_clase, se corresponderan con los campos de la tabla usuarios de la base de datos feedback
+    //Declaramos as variáveis públicas da classe Usuario_clase, elas corresponderão aos campos na tabela de usuários do banco de dados de feedback
     public $nombre_usuario;
 	public $contrasena;
     public $email;
@@ -12,7 +12,7 @@ class Usuario {
     public $formato;
     public $headers;
     public $objetoConexion;
-	//Declaro el método constructor de la clase Usuario_clase al que le pasamos las variables de la propia clase
+	//Declaro o método construtor da classe Usuario_clase para a qual passamos as variáveis da própria classe
 	public function __construct($nombre_usuario,$email) {
         $this->nombre_usuario=$nombre_usuario;
 		$this->email=$email;
@@ -24,25 +24,25 @@ class Usuario {
         $this->objetoConexion=new Conectar('mysql:host=localhost;dbname=feedback','root','');
     }
 
-    //Función que impedirá crear el usuario si no cumple con las condiciones
+    //Função que impedirá o usuário de criar se ele não atender às condições
     public function comprobaciones () {
         $this->objetoConexion->conectar();
-        //Comprobamos que los campos no estén vacíos
+        //Verificamos se os campos não estão vazios.
         if ($this->nombre_usuario == '' || $this->contrasena == '' || $this->email == '') {
             echo "<div id='msg'>Por favor, introduce todos los campos requeridos</div>";
             return false;
         }
-        //Comprobamos que la dirección de correo sea válida
+        //Verificamos se o endereço de e-mail é válido
         elseif (!filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
             echo "<div id='msg'><br/>La dirección de correo electrónico <i>".$this->email."</i> es inválida. Por favor, introduzca una correcta.</div>";
             return false;
         }
-        //Comprobamos que el nombre no esté ya registrado
+        //Verificamos se o nome ainda não está registrado
         else {
-            //Consultamos los registros y su valor en la columna user y los almacenamos en el array $rw
+            //Consultamos os registros e seu valor na coluna do usuário e os armazenamos no $rw
             $rw = $this->objetoConexion->consultar("SELECT user from usuarios");
             if (count($rw)) {
-                    //Recorremos el array y en el caso de que el nombre introducido corresponda con alguno ya registrado impedirá el registro
+                    //Passamos pela matriz e caso o nome inserido corresponda a um já registrado, impedirá a inscrição
                     for ($i=0;$i<count($rw);$i++) {
                         if ($rw[$i]['user'] == $this->nombre_usuario) {
                             echo "<div id='msg'>Nombre de usuario ya registrado. Por favor elija otro.</div>";
@@ -53,23 +53,23 @@ class Usuario {
             }
         }
     }
-    //Función que registra los datos del usuario en la base de datos
+    //Função que registra dados do usuário no banco de dados
     public function nuevo() {     
         try {
             $this->objetoConexion->conectar();
             $this->objetoConexion->ejecutar("INSERT usuarios SET user='$this->nombre_usuario', password='$this->contrasena', email='$this->email'");
-            //Crea un objeto correo cuyos parámetros son el nombre de usuario y el email introducido para posteriormente llamar al método enviar() y mandarle el correo
+            //Cria um objeto de e-mail cujos parâmetros são o nome de usuário e o e-mail inseridos e, em seguida, chamar o método enviar() e enviar-lhe o e-mail
             $this->enviar();
             $this->objetoConexion->desconectar();
         }
         catch (PDOException $ex) {
-            //Devuelve la excepción en caso de no poder insertar el usuario
+            //Retorna a exceção se o usuário não puder ser inserido
             throw $ex;
         }
         $this->objetoConexion->desconectar();
     }
 
-    //Método que envía el correo y devuelve un error si no es posible
+    //Método que envia o e-mail e retorna um erro se não for possível
     public function enviar() {
         $this->headers = "To: ".$this->nombre_usuario ."<".$this->email."> \r \n";
         $this->headers .= "From: ".$this->nombre_origen." <".$this->email_origen."> \r \n";
@@ -102,13 +102,13 @@ class Usuario {
     public function verificar($user,$pass){
         try {   
             $this->objetoConexion->conectar();
-            //Recogemos todas las filas con las columnas user y password y las almacenamos en el array $rw
+            //Coletamos todas as linhas com colunas de usuário e senha e as armazenamos no $rw
             $rw = $this->objetoConexion->consultar("SELECT user, password FROM usuarios");
             if(count($rw)) {
                 //Recorremos todas las filas del array
                 for ($i=0;$i<count($rw);$i++) {
-                    /*Si el usuario introducido coincide con uno almacenado en la base de datos y la función password_verify confirma 
-                    que la contraseña introducida coincide con el hash de la almacenada, la función devuelve true para que el usuario pueda loguear*/
+                    /*Se o usuário entrou corresponde um armazenado no banco de dados e o password_verify confirmado 
+                    que a senha inserida corresponde ao hash do armazenado, a função retorna verdadeira para que o usuário possa logar*/
                     if ($rw[$i]['user'] == $user && password_verify($pass,$rw[$i]['password'])) {
                         echo "Contraseña correcta";
                         return true;

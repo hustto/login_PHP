@@ -5,7 +5,7 @@
 </head>
 <body>
 	<header>
-		<h1>Pantalla de inicio</h1>
+		<h1>Tela de Iniçio</h1>
 	</header>
 	<div id="contenedor">
 
